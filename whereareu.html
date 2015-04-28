@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html> 
+<head> 
+	 <script src="http://maps.google.com/maps/api/js?sensor=false" 
+          type="text/javascript"></script>
+</head> 
+<body>
+	
+	 <div id="map"></div>
+	 <style type="text/css">
+			   html { height: 100% }
+			   body { height: 100%; margin: 0; padding: 0 }
+			   #map { height: 100% }
+	</style>
+
+  <script type="text/javascript">
+    var locations = [
+      ['Faculty 1', 1.4677837,110.4285763],
+      ['Faculty 2', 1.4647135,110.427364],
+      ['Faculty 3', 1.4688723,110.428394],
+      ['Faculty 4', 1.4664985,110.4264387],
+      ['Faculty 5', 1.464568,110.429711]
+    ];
+	
+	//need to change the coordinate based on the area
+    var map = new google.maps.Map(document.getElementById('map'), {
+      zoom: 17,
+      center: new google.maps.LatLng(1.4667292,110.4295384),
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    });
+
+    var infowindow = new google.maps.InfoWindow();
+
+    var marker, i;
+
+    for (i = 0; i < locations.length; i++) {  
+      marker = new google.maps.Marker({
+        position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+        map: map
+      });
+
+      google.maps.event.addListener(marker, 'click', (function(marker, i) {
+        return function() {
+          infowindow.setContent(locations[i][0]);
+          infowindow.open(map, marker);
+        }
+      })(marker, i));
+    }
+	
+	
+	if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(function(position) {
+        var latitude = position.coords.latitude;
+        var longitude = position.coords.longitude;
+        var geolocpoint = new google.maps.LatLng(latitude, longitude);
+
+        var mapOptions = {
+            zoom: 17,
+            center: geolocpoint,
+            mapTypeId: google.maps.MapTypeId.HYBRID
+        }
+        // Place a marker
+        var geolocation = new google.maps.Marker({
+            position: geolocpoint,
+            map: map,
+            title: 'You are here',
+            icon: 'image/here.png'
+        });
+		});
+	}
+	
+ 
+  </script>
+ 
+</body>
+</html>
